@@ -144,10 +144,10 @@ command! -nargs=0 Compile call Compile()
 function! GotoLine()
     let b:gotoline_n = ""
     echohl Question
-    let b:ccommand = input("Goto Line : ", b:gotoline_n)
+    let b:gotoline_n = input("Goto Line : ", b:gotoline_n)
     echohl None
 
-    exec b:gotoline_n . "G"
+    exec b:gotoline_n
 endfunction
 
 command! -nargs=0 GotoLine call GotoLine()
@@ -155,4 +155,4 @@ command! -nargs=0 GotoLine call GotoLine()
 " Global bindings
 nnoremap <C-c><C-h> :EpiHeader<CR>
 nnoremap <C-c><C-c> :w <bar> Compile<CR>
-nnoremap <C-g>:GotoLine<CR>
+nnoremap <C-g> :GotoLine<CR>
