@@ -2,7 +2,7 @@
 Vim configuration for Epitech students.
 
 ## Installation
-- To install, run `./install.sh 
+- To install, run `./install.sh`
 
 ## Post-scriptum
 Unfortunately vim does not really supports system wide installation but you can "enable it" by doing this : 
