@@ -137,7 +137,7 @@ function! Compile()
     exec "make"
 endfunction
 
-command! -nargs=0 Compile :call Compile
+command! -nargs=0 Compile call Compile()
 
 " Global bindings
 nnoremap <C-c><C-h> :EpiHeader<CR>
