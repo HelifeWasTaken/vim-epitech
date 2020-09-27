@@ -12,8 +12,8 @@ Unfortunately vim does not really supports system wide installation but you can 
 
 ## Thanks
 
-Thanks to : (Nasso)[https://github.com/nasso] and (Le-Bit)[https://github.com/Le-Bit] for making this possible implicitly or not
+Thanks to : [Nasso](https://github.com/nasso) and [Le-Bit](https://github.com/Le-Bit) for making this possible implicitly or not
 
 ## Author
 
-(Mattis DALLEAU)[https://github.com/Heliferepo]
+[Mattis DALLEAU](https://github.com/Heliferepo)
