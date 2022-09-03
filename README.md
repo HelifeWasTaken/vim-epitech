@@ -1,4 +1,4 @@
-# epitech-emacs
+# vim-epitech
 Vim configuration for Epitech students.
 
 ## Installation
