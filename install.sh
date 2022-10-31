@@ -6,24 +6,22 @@
 ## vim configuration installer
 ##
 
-VIM_EPITECH_PATH=$HOME/.vim/epitech
+VIM_EPITECH_PATH=/etc/vim/epitech.vim
+VIMRC_SYSTEM_WIDE=/etc/vim/vimrc.local
+VIMRC_LOCAL="/home/$(whoami)/.vimrc"
 
-add_to_vimrc() {
-    if [ ! -f "~/.vimrc" ]; then
-        touch $HOME/.vimrc
-    fi
-
-    grep -q "Epitech configuration" $HOME/.vimrc
+add_configuration_to_file() {
+    grep -q "source $VIM_EPITECH_PATH" "$1"
 
     if [[ $? != 0 ]]; then
         echo "Epitech configuration path does not exist setting one..."
-        cat >> "$HOME/.vimrc" << EOF
+        cat >> "$1" << EOF
 ""
 "" Epitech configuration
 ""
 
-if !empty(glob("~/.vim/epitech/epitech.vim"))        
-	source $VIM_EPITECH_PATH/epitech.vim
+if filereadable(glob("$VIM_EPITECH_PATH"))        
+	source $VIM_EPITECH_PATH
 else
 	echoerr "Cant find epitech.vim configuration file"
 endif
@@ -37,16 +35,21 @@ EOF
 install() {
     echo "Installing Vim configuration"
 
-    echo "Making sure "$VIM_EPITECH_PATH"  exists"
-    mkdir -p $VIM_EPITECH_PATH
+    mkdir -p /etc/vim && cp epitech.vim "$VIM_EPITECH_PATH"
 
-    if [ -f "$VIM_EPITECH_PATH/epitech.vim" ]; then
-        echo "Replacing epitech.vim with the new one"
-    fi
-    cp epitech.vim $VIM_EPITECH_PATH/epitech.vim   
-    add_to_vimrc
+    add_configuration_to_file "$1"
 
     echo "epitech-vim sucessfully installed"
 }
 
-install
+case "$1" in
+  local )
+	install "$VIMRC_LOCAL"
+  ;;
+  system )
+	install "$VIMRC_SYSTEM_WIDE"
+  ;;
+  * )
+	usage
+  ;;
+esac
