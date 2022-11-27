@@ -6,16 +6,14 @@
 ## vim configuration installer
 ##
 
-VIM_EPITECH_PATH=/etc/vim/epitech.vim
-VIMRC_SYSTEM_WIDE=/etc/vim/vimrc.local
-VIMRC_LOCAL="/home/$(whoami)/.vimrc"
+VIM_EPITECH_PATH=""
 
 add_configuration_to_file() {
-    grep -q "source $VIM_EPITECH_PATH" "$1"
+	grep "source $VIM_EPITECH_PATH" "$1"
 
-    if [[ $? != 0 ]]; then
-        echo "Epitech configuration path does not exist setting one..."
-        cat >> "$1" << EOF
+	if [ $? != 0 ]; then
+		echo "Epitech configuration path does not exist setting one..."
+		cat >> "$1" << EOF
 ""
 "" Epitech configuration
 ""
@@ -26,30 +24,74 @@ else
 	echoerr "Cant find epitech.vim configuration file"
 endif
 EOF
-    else
-        echo "Epitech configuration path already exist"
-        echo "Nothing more to do..."
-    fi
+else
+	echo "Epitech configuration path already exist"
+	echo "Nothing more to do..."
+fi
 }
 
 install() {
-    echo "Installing Vim configuration"
+	echo "Installing Vim configuration"
 
-    mkdir -p /etc/vim && cp epitech.vim "$VIM_EPITECH_PATH"
+	touch "$1"
+	cp epitech.vim "$VIM_EPITECH_PATH"
 
-    add_configuration_to_file "$1"
+	add_configuration_to_file "$1"
 
-    echo "epitech-vim sucessfully installed"
+	echo "epitech-vim sucessfully installed"
+}
+
+usage() {
+	echo "To install in local use ./install.sh local"
+	echo
+	echo "To install on the system use ./install.sh system"
+	echo
+	echo "To install for a specifc user use ./install.sh specific_user user_name"
+    echo "It requires that the user has his home folder as /home/user_name"
 }
 
 case "$1" in
-  local )
-	install "$VIMRC_LOCAL"
-  ;;
-  system )
-	install "$VIMRC_SYSTEM_WIDE"
-  ;;
-  * )
-	usage
-  ;;
+	specific_user)
+		folder="/home/$2"
+		user="$2"
+		VIM_EPITECH_PATH="$folder/.vim/epitech.vim"
+
+		if [ "$folder" = "$user" ]; then
+			echo "Missing parameter for user" 1>&2
+		fi
+
+		if [ ! -d "$folder" ]; then
+			echo "Can't find $folder for $user" 1>&2
+		fi
+
+		mkdir -p "$folder/.vim"
+
+		install "$folder/.vimrc"
+
+		chown -R "$user:$user" "$folder/.vim"
+		chown "$user:$user" "$folder/.vimrc"
+		chmod 755 "$folder/.vim"
+		chmod 666 "$folder/.vim/epitech.vim"
+		chmod 666 "$folder/.vimrc"
+		;;
+
+	local)
+		$0 specific_user "$(whoami)"
+		exit $?
+		;;
+
+	system)
+		for dir in /home/* ; do
+			cuser="$(echo $dir | cut -d '/' -f 3)"
+			$0 specific_user "$cuser"
+		done
+
+		mkdir -p "/root/.vim"
+		VIM_EPITECH_PATH="/root/.vim/epitech.vim"
+		install "/root/.vimrc"
+		;;
+
+	*)
+		usage
+		;;
 esac
